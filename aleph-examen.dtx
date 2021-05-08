@@ -1,0 +1,553 @@
+% \iffalse 
+%
+% Copyright (C) 2020 by Andres Merino <mat.andresmerino@gmail.com>
+% 
+% Para un mejor uso y entendimiento de la actual clase, consultar la documentación.
+% -----------------------------------------------------------
+%
+% \fi
+%
+%  \section{Implementación}
+%  \subsection{Identificación}
+% \iffalse
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% --- Identificación
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \fi
+%  Dado que esta clase utiliza el comando \cmd{\RequirePackage}, no funciona con 
+%  versiones antiguas de \LaTeXe.
+%    \begin{macrocode}
+\NeedsTeXFormat{LaTeX2e}[2009/09/24]
+%    \end{macrocode}
+%  El paquete se identifica con su fecha de lanzamiento y su número de versión.
+%    \begin{macrocode}
+\ProvidesClass{aleph-examen}[2020/08/15 v1.0]
+%    \end{macrocode}
+%  \subsection{Inicialización}
+% \iffalse
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% --- Inicialización
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \fi
+%%  Primero definimos una serie de comandos auxiliares para las opciones
+%    \begin{macrocode}
+\newcommand\@tipo{examen}
+\RequirePackage{ifthen}
+\newboolean{resp}\setboolean{resp}{false}
+%    \end{macrocode}
+%  \subsection{Declaración de opciones}
+%
+% \iffalse
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% --- Opciones
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \fi
+%%  Opciones de tamaño de letra.
+%    \begin{macrocode}
+\DeclareOption{10pt}{\PassOptionsToClass{10pt}{article}}
+\DeclareOption{11pt}{\PassOptionsToClass{11pt}{article}}
+\DeclareOption{12pt}{\PassOptionsToClass{12pt}{article}}
+%    \end{macrocode}
+%%  Opciones de tamaño de página.
+%    \begin{macrocode}
+\DeclareOption{a4}{\PassOptionsToPackage{
+    a4paper,left=1.5cm,right=1.5cm,top=1cm,bottom=1cm,includefoot}{geometry}
+    }
+\DeclareOption{a5}{\PassOptionsToPackage{
+    a5paper,left=1cm,right=1cm,top=0.5cm,bottom=0.5cm,includefoot}{geometry}
+    }
+\DeclareOption{compacto}{\PassOptionsToPackage{
+    paperwidth=160mm,paperheight=240mm,
+    left=1cm,right=1cm,top=0.5cm,bottom=0.5cm,includefoot}{geometry}
+    }
+%    \end{macrocode}
+%%  Opción para desplegar respuestas
+%    \begin{macrocode}
+\DeclareOption{respuestas}{\setboolean{resp}{true}}
+%    \end{macrocode}
+%  \subsubsection{Procesamiento de Opciones}
+%%  Opciones predeterminadas son |a4| y |11pt|.
+%    \begin{macrocode}
+\ExecuteOptions{a4,11pt}
+\ProcessOptions\relax
+\LoadClass{article}
+%    \end{macrocode}
+%  \subsection{Paquetes}
+%
+% \iffalse
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% --- Paquetes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \fi
+%%  Son necesarios los siguientes paquetes para dar formato al documento.
+%    \begin{macrocode}
+\RequirePackage[utf8]{inputenc}
+\RequirePackage[T1]{fontenc}
+\RequirePackage[spanish, es-noitemize]{babel}
+\RequirePackage{enumitem}
+\RequirePackage{ifthen}
+\RequirePackage{xcolor}
+\RequirePackage{setspace}
+\RequirePackage{comment}
+\RequirePackage{amsmath,amssymb,amsthm}
+\RequirePackage{calc}
+\RequirePackage{array}
+\RequirePackage{multido}
+\RequirePackage{etex}
+\RequirePackage{mathpazo}
+\RequirePackage{graphicx}
+\RequirePackage{fancyhdr}
+\RequirePackage{geometry}
+\RequirePackage{lastpage}
+\RequirePackage{titlesec}
+\RequirePackage{pgffor,etoolbox}
+%    \end{macrocode}
+%  \subsection{Variables internas}
+%
+% \iffalse
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% --- Variables internas
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \fi
+%%  La siguiente es la lista de las variables internas utilizadas para el formato.
+%    \begin{macrocode}
+\newcommand\@universidad{Escuela de Ciencias Físicas y Matemática}
+\newcommand\@firma{\hspace{0pt}}
+\newcommand\@notapie{\hspace{0pt}}
+\newcommand\@longtitulo{0.75\linewidth}
+\newcommand\@Npreguntas{5}
+%    \end{macrocode}
+%  \subsection{Colores predeterminados}
+%
+% \iffalse
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% --- Colores predeterminados
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \fi
+%%  Los siguientes son los colores predefinidos de la clase.
+%    \begin{macrocode}
+\definecolor{colortext}{RGB}{5,1,100}
+%    \end{macrocode}
+%  \subsection{Definición de comandos de datos}
+%
+% \iffalse
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% --- Definición de comandos de datos
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \fi
+%%  Universidad
+%    \begin{macrocode}
+\newcommand{\universidad}[1]%
+    {\renewcommand\@universidad{#1}}
+%    \end{macrocode}
+%%  Hoja
+%    \begin{macrocode}
+\newcommand{\hoja}[1]%
+    {\newcommand\@hoja{#1}}
+%    \end{macrocode}
+%%  Materia
+%    \begin{macrocode}
+\newcommand{\materia}[1]%
+    {\newcommand\@materia{#1}}
+%    \end{macrocode}
+%%  Autor
+%    \begin{macrocode}
+\newcommand{\autor}[1]%
+    {\newcommand\@autor{#1}}
+%    \end{macrocode}
+%%  Examen
+%    \begin{macrocode}
+\newcommand{\examen}[1]%
+    {\newcommand\@examen{#1}}
+%    \end{macrocode}
+%%  Carrera
+%    \begin{macrocode}
+\newcommand{\carrera}[1]%
+    {\newcommand\@carrera{ #1}}
+%%  Tema
+%    \begin{macrocode}
+\newcommand{\tema}[1]%
+    {\newcommand\@tema{ #1}}
+%    \end{macrocode}
+%%  Fecha
+%    \begin{macrocode}
+\newcommand{\fecha}[1]%
+    {\newcommand\@fecha{#1}}
+%    \end{macrocode}
+%%  Firma
+%    \begin{macrocode}
+\newcommand{\notapie}[1]%
+    {\renewcommand\@notapie{#1}}
+%    \end{macrocode}
+%%  Firma
+%    \begin{macrocode}
+\newcommand{\firma}[1]%
+    {\renewcommand\@firma{#1}}
+%    \end{macrocode}
+%%  Logo uno
+%    \begin{macrocode}
+\newcommand{\logouno}[2][0.1\linewidth]%
+    {\newcommand\@logouno{#2}
+    \newcommand\@longlogouno{#1}}
+%    \end{macrocode}
+%%  Logo dos
+%    \begin{macrocode}
+\newcommand{\logodos}[2][0.1\linewidth]%
+    {\newcommand\@logodos{#2}
+    \newcommand\@longlogodos{#1}}
+%    \end{macrocode}
+%%  Longitud del título
+%    \begin{macrocode}
+\newcommand{\longtitulo}[1]%
+    {\renewcommand\@longtitulo{#1}}
+%    \end{macrocode}
+%  \subsection{Espaciado}
+%
+% \iffalse
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% --- Espaciado
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \fi
+%%  Espacio interlineado
+%    \begin{macrocode}
+\setlength{\parskip}{0.2\baselineskip}
+\renewcommand{\baselinestretch}{1.1}
+%    \end{macrocode}
+%%  Espacio entre modo desplegado
+%    \begin{macrocode}
+\AtBeginDocument{
+    \addtolength{\abovedisplayskip}{-1.5mm}
+    \addtolength{\belowdisplayskip}{-1.5mm}
+}
+%    \end{macrocode}
+%  \subsection{Encabezado}
+%
+% \iffalse
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% --- Encabezado
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \fi
+%%  Comando para generar el título
+%    \begin{macrocode}
+\newcommand\@titulo{
+    \large\textbf{\textsc{\@universidad\\
+    \ifthenelse{\isundefined{\@hoja}}{}{\@hoja\\}
+    \normalsize
+    \ifthenelse{\isundefined{\@carrera}}{}{\normalsize\textsc{\@carrera}\\}
+    \@materia\ \ $\bullet$\ \
+    \@examen}}\\
+    \ifthenelse{\isundefined{\@tema}}{}{\normalsize\textsc{\@tema}\\}
+    }
+\newcommand\@inlogouno{
+    \parbox{\@longlogouno}
+    {\centering
+    \ifthenelse{\isundefined{\@logouno}}{\hspace{0pt}}
+        {\includegraphics[width=0.95\linewidth]{\@logouno}}}
+    }
+\newcommand\@inlogodos{
+    \parbox{\@longlogodos}
+    {\centering
+    \ifthenelse{\isundefined{\@logodos}}{\hspace{0pt}}
+        {\includegraphics[width=0.95\linewidth]{\@logodos}}}
+    }
+%    \end{macrocode}
+%%  Comando para generar el encabezado
+%    \begin{macrocode}
+\newcommand{\encabezado}{
+    \hrule
+    \vspace{-2mm}
+    \begin{center}
+    \ifthenelse{\isundefined{\@logodos}}
+        {\ifthenelse{\isundefined{\@logouno}}
+            {\@titulo}
+            {
+                \@inlogouno
+                \parbox{\@longtitulo}{\centering \@titulo}
+            }
+        }
+        {
+            \@inlogouno
+            \parbox{\@longtitulo}{\centering \@titulo}
+            \@inlogodos
+        }
+    \end{center}
+    \vspace{0mm}
+    \noindent
+    \@fecha\hspace{\fill}
+    \@autor\\[-3mm]
+    \noindent
+    \hrule
+    \ifthenelse{\boolean{resp}}{\color{colortext}}{}
+}
+%    \end{macrocode}
+%  \subsection{Comando en examen y en respuestas}
+%
+% \iffalse
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% --- Comando en examen y en respuestas
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\fi
+%% Para material que solo aparece en examen
+%    \begin{macrocode}
+\newcommand{\EnExamen}[1]{\ifthenelse{\boolean{resp}}{}{#1}}
+%    \end{macrocode}
+%% Para material que solo aparece en respuesta
+%    \begin{macrocode}
+\newcommand{\EnRespuesta}[1]{\ifthenelse{\boolean{resp}}{#1}{}}
+%    \end{macrocode}
+%  \subsection{Comando para linea de datos del estudiante}
+%
+% \iffalse
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% --- Comando para linea de datos del estudiante
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \fi
+%%  Para estudiantes de Formación Básica
+%    \begin{macrocode}
+\newcommand{\datosF}{\EnExamen{
+    \vspace{5mm}
+    \noindent
+    Nombres: \hrulefill\ 
+    Grupo CP: \rule{2cm}{0.4pt}\ 
+    Grupo CD: \rule{2cm}{0.4pt}}}
+%    \end{macrocode}
+%%  Para estudiantes de Nivelación
+%    \begin{macrocode}
+\newcommand{\datosN}{\EnExamen{
+    \vspace{5mm}
+    \noindent
+    Nombres: \hrulefill\ 
+    Firma: \rule{3cm}{0.4pt}\\[3mm]
+    Profesor: \hrulefill\ 
+    No. Lista: \rule{2cm}{0.4pt}\ 
+    Paralelo: \rule{2cm}{0.4pt}}}
+%    \end{macrocode}
+%  \subsection{Preguntas}
+%
+% \iffalse
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% --- Preguntas
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \fi
+%%  Ambiente para preguntas
+%    \begin{macrocode}
+\newenvironment{preguntas}[1][]
+    {\begin{enumerate}[leftmargin=*,listparindent=\parindent,#1]}
+    {\end{enumerate}}
+%    \end{macrocode}
+%%  Al final de las preguntas
+%    \begin{macrocode}
+\newcommand{\final}{\noindent\hrule\@notapie\hspace{\fill}\@firma}
+%    \end{macrocode}
+%  \subsection{Indicaciones}
+%
+% \iffalse
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% --- Indicaciones
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\fi
+%%  Ambiente para indicaciones
+%    \begin{macrocode}
+\newenvironment{indicaciones}
+    {\section*{Indicaciones}\begingroup\small
+    \begin{itemize}[leftmargin=*,listparindent=\parindent]}
+    {\end{itemize}\endgroup}
+%    \end{macrocode}
+%%  Comando para indicaciones para la hoja de datos
+%    \begin{macrocode}
+\newcommand{\indicacionesHD}[1]
+    {\newcommand\@indicaciones{#1}}
+%    \end{macrocode}
+%  \subsection{Respuestas}
+%
+% \iffalse
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% --- Respuestas
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \fi
+%%  Ambiente para respuestas
+%    \begin{macrocode}
+\ifthenelse{\boolean{resp}}{
+   \newenvironment{respuesta}[1][Solución]
+      {\begingroup\color{black}\begin{proof}[#1]\hspace{0pt}\relax}
+      {\end{proof}\endgroup}
+   }
+   {\excludecomment{respuesta}}
+%    \end{macrocode}
+%  \subsection{Respuesta de opción múltiple}
+%
+% \iffalse
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% --- Respuesta de opción múltiple
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \fi
+%%  Comando para opción múltiple
+%    \begin{macrocode}
+\newcommand{\opciones}[4]
+    {\vspace{-1mm}
+    \begin{enumerate}[leftmargin=*,label=\textit{\alph*)}]
+	    \item #1 \item #2 \item #3 \item #4
+    \end{enumerate}
+    }
+%    \end{macrocode}
+%%  Comando para opción múltiple en linea
+%    \begin{macrocode}
+\newcommand{\opcionesl}[4]
+    {\par\noindent
+    \textit{a)} \ #1 \hfill
+    \textit{b)} \ #2 \hfill
+    \textit{c)} \ #3 \hfill
+    \textit{d)} \ #4 
+    }
+%    \end{macrocode}
+%  \subsection{Puntaje}
+%
+% \iffalse
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% --- Puntaje
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \fi
+%%  Comando para puntaje
+%    \begin{macrocode}
+\newcommand{\puntaje}[1]{
+    \hspace{\fill}{\footnotesize(#1pt)}
+    }
+%    \end{macrocode}
+%  \subsection{Estilo página}
+%
+% \iffalse
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% --- Estilo página
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \fi
+%%  Encabezado y pie de página
+%    \begin{macrocode}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+%    \end{macrocode}
+%  \subsection{Estilo secciones}
+%
+% \iffalse
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% --- Estilo secciones
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \fi
+%%  Formato secciones
+%    \begin{macrocode}
+\titleformat{\section}
+    {\normalfont\large\bfseries\scshape}{\thesection}{1em}{}
+\titlespacing*{\section}{0pt}{2ex}{0.1ex}
+%    \end{macrocode}
+%%  Formato subsecciones
+%    \begin{macrocode}
+\titleformat{\subsection}
+    {\normalfontnormalsize\bfseries\scshape}{\thesubsection}{1em}{}
+\titlespacing*{\subsection}{0pt}{2ex}{0.1ex}
+%    \end{macrocode}
+%  \subsection{Hoja de datos}
+%
+% \iffalse
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% --- Hoja de datos
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \fi
+%%  Comando de códigos
+%    \begin{macrocode}
+\newcommand{\Npreguntas}[1]
+    {\renewcommand\@Npreguntas{#1}}
+\newcommand*\mytablecontentsUpper{}
+\newcommand*\mytablecontentsLower{}
+%    \end{macrocode}
+%%  Comando de cuadro preguntas
+%    \begin{macrocode}
+\newcommand{\CuadroPreguntas}[1]{
+    \renewcommand*\mytablecontentsUpper{}
+    \renewcommand*\mytablecontentsLower{}
+    \foreach \X in {1,...,#1}{
+        {\xappto\mytablecontentsUpper{ & P-\X}
+        \xappto\mytablecontentsLower{ & }
+        }
+    }
+    \begin{tabular}{|c|*{#1}{c|}}\hline
+         \mytablecontentsUpper \\
+        \hline
+        Entrega (sí/no) \mytablecontentsLower \\
+        \hline
+        No. de hojas \mytablecontentsLower \\
+        \hline
+    \end{tabular}
+    }
+%    \end{macrocode}
+%%  Comando de códigos
+%    \begin{macrocode}
+\newcommand{\codigo}[5]
+    {\thispagestyle{empty}
+    \encabezado
+    \begin{indicaciones}
+    \@indicaciones
+    \end{indicaciones}
+    \noindent \hrule \large
+    \begin{center}
+        \textbf{\textsc{Datos}}
+
+        Nombre: #1
+
+        Código: #2
+        \hspace{1.5cm}
+        Grupo CD: #3
+        \hspace{1.5cm}
+        Grupo CP: #4
+    \end{center}
+    \noindent \hrule
+    \begin{center}
+        \textbf{\textsc{Preguntas entregadas}}
+
+        \CuadroPreguntas{\@Npreguntas}
+
+        \vspace{2.5cm}
+        \begin{tabular}{p{5cm}}
+             \hline\centering Firma
+        \end{tabular}
+    \end{center}
+    \newpage
+    }
+%    \end{macrocode}
+%  \subsection{Hoja de respuestas}
+%
+% \iffalse
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% --- Hoja de respuestas
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \fi
+%%  Comando para cuadro
+%    \begin{macrocode}
+\newcommand{\cuadro}[1][Aj]
+    {\fbox{\textcolor{white}{\LARGE #1}}}
+%    \end{macrocode}
+%%  Comando de hoja de respuesta  
+%    \begin{macrocode}
+\newcommand{\HojaRespuesta}[1][]
+    {
+    \thispagestyle{empty}
+    \hrule
+    \vspace{-2mm}
+    \begin{center}
+    \large\textbf{\textsc{Hoja de respuestas}}
+    \end{center}
+
+    \vspace{-2mm}
+    \noindent
+    Código: \cuadro\cuadro\cuadro\cuadro\hspace{\fill}
+    Número de pregunta: \cuadro\hspace{\fill}
+    Hoja (de esta pregunta): \cuadro\ de \cuadro%
+    \ifthenelse{\equal{#1}{}}{\\}
+        {\\[2mm] #1\\}
+    \noindent \hrule
+    }
+%    \end{macrocode}
+%%  Y ¡se acabó!
+%    \Finale
+\endinput
