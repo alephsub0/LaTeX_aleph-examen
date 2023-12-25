@@ -22,7 +22,7 @@
 %%  Son necesarios los siguientes paquetes para utilizar los comandos.
 \RequirePackage{ifthen}
 \RequirePackage{calc}
-\RequirePackage{etex}
+% \RequirePackage{etex}
 \RequirePackage{amsmath,amssymb}
 \RequirePackage{xcolor}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -56,7 +56,9 @@
 \newcommand{\Rbb}{\mathbb{R}}
 \newcommand{\reales}{\mathbb{R}}
 %%  Números complejos
-\newcommand{\C}{\mathbb{C}}
+\@ifundefined{C}
+    {\newcommand{\C}{\mathbb{C}}}
+    {\renewcommand{\C}{\mathbb{C}}}
 \newcommand{\Cbb}{\mathbb{C}}
 %%  Campos
 \newcommand{\K}{\mathbb{K}}
@@ -106,6 +108,11 @@
 \DeclareMathOperator{\arccsc}{arc\,csc}
 \DeclareMathOperator{\arccot}{arc\,cot}
 \DeclareMathOperator{\arcsec}{arc\,sec}
+\DeclareMathOperator{\arcsen}{arc\,sen}
+\let\arccos\relax
+\DeclareMathOperator{\arccos}{arc\,cos}
+\let\arcsin\relax
+\DeclareMathOperator{\arcsin}{arc\,sen}
 %%  Espacio generado
 \DeclareMathOperator{\spn}{span}
 %%  Parte real y parte imaginaria

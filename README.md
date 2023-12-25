@@ -1,4 +1,4 @@
-## aleph-examen 1.0
+## aleph-examen 2.0
 
 Esta clase fue creada para dar formato a exámenes. Esta clase genera el encabezado y los ambientes necesarios para ocultar automáticamente las soluciones, entre otros. Esta clase fue generada dentro del proyecto Alephsub0 (https://www.alephsub0.org/)
 
@@ -7,8 +7,12 @@ Para visualizar un ejemplo puedes acceder al repositorio de GitHub de esta clase
 ### Últimos cambios
 
 ```
-1.0  2020-08-15
-   - Se actualizó la documentación
+2.0  2023-12-25
+   - Se agrega el soporte para los ambientes de teoremas implementados en los paquetes aleph-notas y aleph-libro
+   - Se añade la posibilidad de seleccionar fuentes: Palatino Linotype (mathpaso) y Monstserrat
+   - Se modifican los comandos de datos
+   - Se cambia el diseño del encabezado y disposición de los logos
+   - Actualización de la documentación
 ```
 
 Repositorio:  https://github.com/mate-andres/LaTeX_aleph-examen
@@ -22,4 +26,4 @@ ________
 Andrés Merino,
 Proyecto Alephsub0 --- https://www.alephsub0.org/
 
-2020/08/14
+2023/12/25

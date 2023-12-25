@@ -7,6 +7,7 @@
 \usepackage{float}
 \usepackage{xcolor}
 \usepackage[margin=2.5cm,left=3.5cm]{geometry}
+\usepackage{changelog}
 
 \setlength{\parskip}{0.2\baselineskip}
 \renewcommand{\baselinestretch}{1.1}
@@ -17,7 +18,7 @@
 
 \title{\file{aleph-examen.cls}}
 \author{Proyecto Alephsub0\\ Andr\'es Merino}
-\date{2020-08-15\\ Versión 1.0}
+\date{2023-12-25\\ Versión 2.0}
 
 \usepackage[colorlinks,linkcolor=teal,urlcolor=teal,
    citecolor=black,bookmarks=true]{hyperref}
@@ -67,57 +68,50 @@ Las opciones de la clase son las siguientes:
 
 Las clase trabaja con un color básico:
 \begin{description}
-    \item[|colortext|] es el color preestablecido para los enunciados bajo la opción |respuestas|. El color predefinido por la clase es |blue!50!black|.
+    \item[|colortext|] es el color preestablecido para los enunciados bajo la opción |respuestas|. El color predefinido por la clase es $(0.81,0.62,0.00,0.22)$ del formato |cmyk|.
 \end{description}
 Se puede cambiar fácilmente este color con los comandos\\
     \hspace*{3em}\cs{definecolor}|{colortext}|\marg{formato de color}\marg{color}\\
 o\\
     \hspace*{3em}\cs{colorlet}|{colortext}|\marg{color}
 
+\section{Comando para tipografía}
+
+Para esta nueva versión se incluye el comando \verb|\fuente|
+
+\DescribeMacro{\fuente} 
+    El comando fuente tiene el formato\\
+        \hspace*{3em}\cs{fuente}\marg{nombre fuente},\\
+    el \meta{nnombre fuente} especifica el tipo de paquete de fuente incluido en el documento, las opciones son: mathpazo y monstserrat.
+
 \subsection{Comandos de datos del examen}
 
-\DescribeMacro{\universidad} 
-    El comando universidad tiene el formato\\
-        \hspace*{3em}\cs{universidad}\marg{nombre de la universidad}.\\
+\DescribeMacro{\institucion} 
+    El comando institución tiene el formato\\
+        \hspace*{3em}\cs{institución}\marg{nombre de la institución}.\\
     este comando es opcional, de no estar presente, el nombre de universidad por defecto es Escuela de Ciencias Físicas y Matemática (lugar donde trabaja actualmente el autor de la clase).
 
-\DescribeMacro{\carrera} 
-\DescribeMacro{\materia}
-\DescribeMacro{\examen}
 \DescribeMacro{\autor}
-\DescribeMacro{\fecha} 
-    Los comandos \cmd{\carrera} (opcional), \cmd{\materia}, \cmd{\examen}, \cmd{\autor} y \cmd{\fecha} dan la información que se utilizará en el encabezado, todas estas son obligatorias para generar exámenes u hojas de datos. No son empleadas al generar hojas de respuestas (no es necesarios incluirlos en estas hojas). El contenido de \cmd{\materia} y \cmd{\examen} se despliega en forma centrada mientras que el de \cmd{\autor} y \cmd{\fecha} se despliega en los extremos de la página.
-
-\DescribeMacro{\hoja}
+\DescribeMacro{\carrera} 
+\DescribeMacro{\asignatura}
 \DescribeMacro{\tema}
     Los comandos \cmd{\hoja} y \cmd{\tema} agregan información para el encabezado pero son opcionales. Se utiliza el comando \cmd{\hoja} para establecer si se trata de una hoja de enunciado o de datos.
 
-\DescribeMacro{\notapie}
-\DescribeMacro{\firma}
-    Los comandos \cmd{\notapie} y \cmd{\firma} agregan información al final de la evaluación, luego de la linea final. Se utilizan para agregar notas al pie y firma de autoría.
+\DescribeMacro{\fecha} 
+    Los comandos \cmd{\carrera}, \cmd{\materia}, \cmd{\autor} y \cmd{\fecha} dan la información que se utilizará en el encabezado, todas estas son obligatorias para generar exámenes u hojas de datos. No son empleadas al generar hojas de respuestas (no es necesarios incluirlos en estas hojas). El contenido de \cmd{\materia} y \cmd{\examen} se despliega en forma centrada mientras que el de \cmd{\autor} y \cmd{\fecha} se despliega en los extremos de la página.
 
 \DescribeMacro{\logouno}
 \DescribeMacro{\logodos}
     Los comandos \cmd{\logouno} y \cmd{\logodos} definen el archivo de logo a ser utilizado, ninguno de los dos es obligatorio. Cada comando tiene un argumento opcional en el cual se puede especificar el tamaño del logo.
-
-\DescribeMacro{\Npreguntas}
-    El comando \cmd{\Npreguntas} guarda la información del número de preguntas para generar el cuadro de información en la hoja de datos. No es necesario si no se utiliza el comando |\codigo|.
-
 
 \subsection{Comandos}
 
 \DescribeMacro{\encabezado}
     El comando \cmd{\encabezado} genera el encabezado de la página, no tiene ninguna opción.
 
-
 \DescribeMacro{\EnExamen}
 \DescribeMacro{\EnRespuesta}
     Los comandos \cmd{\EnExamen} y \cmd{\EnRespuesta} generan material que únicamente se desplegará si está habilitada o inhabilitada la opción |respuestas| en las opciones de la clase.
-
-\DescribeMacro{\datosF}
-\DescribeMacro{\datosN}
-\DescribeMacro{\datosP}
-    Los comandos \cmd{\datosF} y \cmd{\datosS} generan líneas para que el alumnos pueda colocar sus datos, tanto para datos de Formación Básica de la EPN (\cmd{\datosF}) como para datos de Nivelación de la EPN (\cmd{\datosN}) estas lineas solo se despliegan fuera de la opción |respuestas|. El comando \cmd{\datosP} genera líneas para los datos usuales solicitados en la PUCE.
 
 \DescribeMacro{\opciones}
 \DescribeMacro{\opcionesl}
@@ -127,16 +121,6 @@ o\\
     
 \DescribeMacro{\puntaje}
     El comando \cmd{\puntaje} coloca el puntaje al final de cada pregunta.
-    
-\DescribeMacro{\codigo}
-    El comando \cmd{\codigo} tiene cinco argumentos obligatorios y sirve para generar hojas de código de cada estudiante, su sintaxis es:\\
-        \hspace*{3em}\cs{codigo}\marg{Nombre}\marg{Código}\marg{Grupo CD}\marg{Grupo CP}.
-
-\DescribeMacro{\cuadro}
-    El comando \cmd{\cuadro} genera un cuadro en blanco, útil para generar las hojas de respuestas. Este comando posee una opción la cual es el texto del cual se quiere medir el tamaño para generar el cuadro.
-
-\DescribeMacro{\HojaRespuesta}
-    El comando \cmd{\HojaRespuesta} genera la hoja de respuestas estandar, este comando posee una opción que se utiliza para colocar más información en esta hoja.
   
 \subsection{Ambientes}
 
@@ -145,16 +129,11 @@ o\\
     
 \DescribeEnv{indicaciones}
     El ambiente |indicaciones| genera una lista en letra pequeña con el título de ``Indicaciones''. No confundir con el comando |\indicacionesHD|, no utilizar este ambiente al generar la hoja de datos.
-
-\DescribeMacro{\indicacionesHD}
-    El comando \cmd{\indicacionesHD} guarda la información de indicaciones para generar hojas de datos. Este comando es útil únicamente en las hojas de datos pues guarda las indicaciones para replicarlas en cada hoja. 
     
 \DescribeEnv{respuesta}
     El ambiente |respuesta| genera un ambiente |proof| para la redacción de las respuestas a las preguntas. Las preguntas van tituladas por ``Solución'' de manera predefinida, esta se puede cambiar como una opción del paquete.
     
     El contenido del ambiente |respuesta| únicamente de desplegará cuando la opción |respuestas| esté incluida en la clase. Para que esto funcione adecuadamente, los comandos |\begin{respuesta}| y |\end{respuesta}| deben estar al inicio de la linea de código, es decir no debe existir ningún espacio en blanco antes de estos comandos.
-    
-
 
 \section{Ejemplos}
 
@@ -162,41 +141,58 @@ o\\
 
 Un examen puede tener la siguiente forma:
 \begin{verbatim}
-    %\documentclass[10pt,respuestas,a4]{aleph-examen}
-    \documentclass[10pt,a4]{aleph-examen}
+    % \documentclass[10pt,a4]{aleph-examen-beta}
+    \documentclass[10pt,a4,respuestas]{aleph-examen}
     
+    % -- Paquetes 
     \usepackage{aleph-comandos}
     
-    \hoja{Hoja de enunciados}
-    \materia{Cálculo Vectorial}
-    \examen{Examen del Segundo Bimestre}
-    %\tema{Integrales}
-    \autor{Departamento de Formación Básica}
-    \fecha{Miércoles 8 de agosto de 2018 (120 minutos)}
-    \logouno{Logo_DFB.eps}
-    \logodos{Buho_EPN.eps}
+    % -- Datos del libro
+    \institucion{Escuela de Ciencias Físicas y Matemática}
+    \carrera{Enfermería}
+    \asignatura{Bioestadística}
+    \autor{Mat. Andrés Merino}
+    \tema{Examen No. 1: Funciones}
+    \fecha{Semestre 2022-1}
+    \fuente{montserrat}
+    \logouno[0.1\textwidth]{Logo_EPN}
     
     \begin{document}
     
     \encabezado
-    %\datosN
+    
+    \begin{indicaciones}
+        \item Indicación 1
+        \item Indicación 2
+        \item Indicación 3
+    \end{indicaciones}
+    
+    \section*{Preguntas}
     
     \begin{preguntas}
     \item
         Encontrar los extremos de la función
         \[
-            \funcion{f}{\R^3}{\R}{(x,y,z)}{\frac{x^2}{2} 
-            + \frac{y^2}{2} + \frac{z^2}{2}}
+            \funcion{f}{S}{\R}{(x,y,z)}{\frac{x^2}{2} + \frac{y^2}{2} + \frac{z^2}{2}.}
         \]
-        
+    
     \begin{respuesta}
         La función no tiene extremo.
     \end{respuesta}
     
+    \item
+        Escriba la definición de derivada de una función en un número.
+        
+    \begin{respuesta}
+        Dada una función $\func{f}{I}{\R}$ y $a\in I$, se dice que $f$ es derivable en $a$ si existe
+        \[
+            \lim_{h\to 0}\frac{f(x+h)-f(x)}{h}
+        \]
+    \end{respuesta}
+    
     \end{preguntas}
-    \final
+    
     \end{document}
-
 \end{verbatim}
 Con esto se obtiene las imágenes indicadas en la Figura~\ref{fig:01}, dependiendo si la opción respuesta está o no incluida.
 
@@ -208,76 +204,33 @@ Con esto se obtiene las imágenes indicadas en la Figura~\ref{fig:01}, dependien
     \label{fig:01}
 \end{figure}
 
-\subsection{Hoja de datos}
-
-Una hoja de datos puede tener la siguiente forma:
-\begin{verbatim}
-    \documentclass[10pt,a4]{aleph-examen}
-    
-    \hoja{Hoja de datos}
-    \materia{Cálculo Vectorial}
-    \examen{Examen del Segundo Bimestre}
-    \autor{Departamento de Formación Básica}
-    \fecha{Miércoles 8 de agosto de 2018 (120 minutos)}
-    \logodos[1cm]{Buho_EPN.eps}
-    \logouno[3cm]{Logo_DFB.eps}
-    \Npreguntas{6}
-    
-    \indicacionesHD{
-        \item
-            Deberá permanecer en el aula durante los primeros 45 minutos.
-        \item 
-            No escriba su nombre en las hojas de respuestas, únicamente su código, 
-            que lo encontrará en esta hoja.	
-        }
-    
-    
-    \begin{document}
-    
-    \codigo{1}{ACURIO MORENO STALIN VLADIMIR}{GR1}{GR2S1}{5303}
-    \codigo{2}{ACOSTA MERINO LUIS ELI}{GR2}{GR1S1}{5305}
-    
-    \end{document}
-
-\end{verbatim}
-
-Con esto se generará una hoja de datos por cada comando código que se escriba, obtiene la imagen indicada en la Figura~\ref{fig:02}.
-
-\begin{figure}[H]
-    \centering
-    \fbox{\includegraphics[width=0.45\linewidth]{Figuras/HojaDatos_1.eps}}
-    \fbox{\includegraphics[width=0.45\linewidth]{Figuras/HojaDatos_2.eps}}
-    \caption{Ejemplo de hoja de datos}
-    \label{fig:02}
-\end{figure}
-
-\subsection{Hoja de respuesta}
-
-Una hoja de respuesta puede tener la siguiente forma:
-\begin{verbatim}
-    \documentclass[10pt,a4]{aleph-examen}
-    
-    \begin{document}
-    
-    \HojaRespuesta
-    
-    \end{document}
-
-\end{verbatim}
-
-Con esto se generará una hoja de respuesta genérica, obtiene la imagen indicada en la Figura~\ref{fig:03}.
-
-\begin{figure}[H]
-    \centering
-    \fbox{\includegraphics[width=0.45\linewidth]{Figuras/HojaRespuestas.eps}}
-    \caption{Ejemplo de hoja de respuestas}
-    \label{fig:03}
-\end{figure}
-
 \subsection{Problemas}
 
 Cualquier problema adicional, por favor reportarlo a\\ 
 \url{mat.andresmerino@gmail.com}.
+
+\begin{changelog}[author=Andés Merino,
+    sectioncmd=\section]
+    % version 2.0
+    \begin{version}[author=Daniel Lara,v=2.0,
+        date=2023-11-27]
+        \added
+        \item Se agrega el soporte para los ambientes de teoremas implementados en los paquetes |aleph-notas| y |aleph-libro|.
+        \added 
+        \item Se añade la posibilidad de seleccionar fuentes: Palatino Linotype (mathpaso) y Monstserrat.
+        \changed 
+        \item Se modifican los comandos de datos.
+        \item Se cambia el diseño del encabezado y disposición de los logos. 
+    \end{version}
+    % version 1.0
+    \shortversion{v=1.0,
+    date=2020-08-15,
+    changes=Primera versión del paquete \texttt{aleph-examen}}
+    % version 0.1
+    \shortversion{v=0.1,
+    date=2020-01-07,
+    changes=Última versión del parquete \texttt{examenEPN}}
+\end{changelog}
 
 \newpage
 \DocInput{aleph-examen.dtx}

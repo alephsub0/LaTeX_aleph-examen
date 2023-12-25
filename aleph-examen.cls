@@ -18,12 +18,11 @@
 %% --- Identificación
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \NeedsTeXFormat{LaTeX2e}[2009/09/24]
-\ProvidesClass{aleph-examen}[2020/08/15 v1.0]
+\ProvidesClass{aleph-examen}[2023/12/25 v2.0]
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% --- Inicialización
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%  Primero definimos una serie de comandos auxiliares para las opciones
-\newcommand\@tipo{examen}
 \RequirePackage{ifthen}
 \newboolean{resp}\setboolean{resp}{false}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -54,73 +53,96 @@
 %% --- Paquetes
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%  Son necesarios los siguientes paquetes para dar formato al documento.
-\RequirePackage[utf8]{inputenc}
+\RequirePackage{iftex}
+\ifPDFTeX % LaTeX y pdfLaTeX
+    \RequirePackage[utf8]{inputenc}
+\else % XeLaTeX
+\fi
 \RequirePackage[T1]{fontenc}
-\RequirePackage[spanish, es-noitemize]{babel}
-\RequirePackage{enumitem}
-\RequirePackage{ifthen}
+\RequirePackage[spanish,es-noitemize]{babel}
 \RequirePackage{xcolor}
-\RequirePackage{setspace}
-\RequirePackage{comment}
 \RequirePackage{amsmath,amssymb,amsthm}
-\RequirePackage{calc}
-\RequirePackage{array}
-\RequirePackage{multido}
-\RequirePackage{etex}
-\RequirePackage{mathpazo}
+\RequirePackage{enumitem}
+\RequirePackage[many]{tcolorbox}
+\RequirePackage{fontawesome}
+\RequirePackage{comment}
 \RequirePackage{graphicx}
 \RequirePackage{fancyhdr}
 \RequirePackage{geometry}
-\RequirePackage{lastpage}
 \RequirePackage{titlesec}
-\RequirePackage{pgffor,etoolbox}
+\RequirePackage{tabularray}
+\RequirePackage{etoolbox}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% --- Paquetes de tipografía
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% El siguiente comando define las opciones de tipografía a utilizar de acuerdo al tipo de compilador
+\newcommand{\fuente}[1]{
+    \ifthenelse{\equal{#1}{mathpazo}}
+    {
+        \ifPDFTeX % LaTeX y pdfLaTeX
+            \RequirePackage{mathpazo}
+        \else % XeLaTeX
+            \RequirePackage{fontspec}
+            \RequirePackage{mathpazo}
+            \setmainfont
+             [ BoldFont       = texgyrepagella-bold.otf ,
+               ItalicFont     = texgyrepagella-italic.otf ,
+               BoldItalicFont = texgyrepagella-bolditalic.otf ]
+             {texgyrepagella-regular.otf}
+            % \RequirePackage{newpxtext,newpxmath}
+        \fi
+    }{}
+    \ifthenelse{\equal{#1}{montserrat}}
+    {
+        \ifPDFTeX % LaTeX y pdfLaTeX
+            \RequirePackage[defaultfam,tabular,lining]{montserrat}
+                \renewcommand*\oldstylenums[1]{{\fontfamily{Montserrat-TOsF}\selectfont #1}}
+            \RequirePackage[OT1]{eulervm}
+            \renewcommand{\labelitemi}{$\bullet$}
+            \DeclareMathSizes{10}{10.78}{7}{7}
+        \else % XeLaTeX
+            \RequirePackage[OT1]{eulervm}
+            \RequirePackage{fontspec}
+            \setmainfont{montserrat}
+            \DeclareSymbolFont{operators}{\encodingdefault}{\familydefault}{m}{n}
+            \DeclareMathSizes{10}{10.78}{7}{7}
+        \fi
+    }{}
+}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% --- Variables internas
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%  La siguiente es la lista de las variables internas utilizadas para el formato.
-\newcommand\@universidad{Escuela de Ciencias Físicas y Matemática}
+\newcommand\@institucion{Alephsub0}
 \newcommand\@firma{\hspace{0pt}}
 \newcommand\@notapie{\hspace{0pt}}
-\newcommand\@longtitulo{0.75\linewidth}
-\newcommand\@Npreguntas{5}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% --- Colores predeterminados
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%  Los siguientes son los colores predefinidos de la clase.
-\definecolor{colortext}{RGB}{5,1,100}
+\definecolor{colortext}{cmyk}{0.81,0.62,0.00,0.22}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% --- Definición de comandos de datos
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%  Universidad
-\newcommand{\universidad}[1]%
-    {\renewcommand\@universidad{#1}}
-%%  Hoja
-\newcommand{\hoja}[1]%
-    {\newcommand\@hoja{#1}}
-%%  Materia
-\newcommand{\materia}[1]%
-    {\newcommand\@materia{#1}}
-%%  Autor
-\newcommand{\autor}[1]%
-    {\newcommand\@autor{#1}}
-%%  Examen
-\newcommand{\examen}[1]%
-    {\newcommand\@examen{#1}}
-%%  Carrera
+%%  Institución
+\newcommand{\institucion}[1]%
+    {\renewcommand\@institucion{#1}}
+%%  Autor: autor corto, autor normal
+\newcommand{\autor}[2][]{\ifthenelse{\equal{#1}{}}
+   {\newcommand\@autorcorto{#2}\newcommand\@autor{#2}}
+   {\newcommand\@autorcorto{#1}\newcommand\@autor{#2}}}
+%% Carrera
 \newcommand{\carrera}[1]%
-    {\newcommand\@carrera{ #1}}
+    {\newcommand\@carrera{#1}}
+%%  Asginatura
+\newcommand{\asignatura}[1]%
+    {\newcommand\@asignatura{#1}}
 %%  Tema
 \newcommand{\tema}[1]%
-    {\newcommand\@tema{ #1}}
+    {\newcommand\@tema{#1}}
 %%  Fecha
 \newcommand{\fecha}[1]%
     {\newcommand\@fecha{#1}}
-%%  Firma
-\newcommand{\notapie}[1]%
-    {\renewcommand\@notapie{#1}}
-%%  Firma
-\newcommand{\firma}[1]%
-    {\renewcommand\@firma{#1}}
 %%  Logo uno
 \newcommand{\logouno}[2][0.1\linewidth]%
     {\newcommand\@logouno{#2}
@@ -129,9 +151,6 @@
 \newcommand{\logodos}[2][0.1\linewidth]%
     {\newcommand\@logodos{#2}
     \newcommand\@longlogodos{#1}}
-%%  Longitud del título
-\newcommand{\longtitulo}[1]%
-    {\renewcommand\@longtitulo{#1}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% --- Espaciado
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -148,52 +167,49 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%  Comando para generar el título
 \newcommand\@titulo{
-    \large\textbf{\textsc{\@universidad\\
-    \ifthenelse{\isundefined{\@hoja}}{}{\@hoja\\}
+    \textbf{\textsc{\large\@institucion
     \normalsize
-    \ifthenelse{\isundefined{\@carrera}}{}{\normalsize\textsc{\@carrera}\\}
-    \@materia\ \ $\bullet$\ \
-    \@examen}}\\
-    \ifthenelse{\isundefined{\@tema}}{}{\normalsize\textsc{\@tema}\\}
+    \ifthenelse{
+            \isundefined{\@carrera}
+            \OR
+            \isundefined{\@asignatura}
+        }
+        {
+            \ifdef{\@carrera}{\\\@carrera}{}
+            \ifdef{\@asignatura}{\\\@asignatura}{}
+        }
+        {\\\@carrera\ \ $\bullet$\ \ \@asignatura}}}
+    \ifdef{\@tema}{\\\normalsize\textsc{\@tema}}{}
+    \\\textsl{\@autor} \ifdef{\@fecha}{\ \ $\bullet$\ \ \ \textsl{\@fecha}}{}
     }
 \newcommand\@inlogouno{
     \parbox{\@longlogouno}
-    {\centering
-    \ifthenelse{\isundefined{\@logouno}}{\hspace{0pt}}
-        {\includegraphics[width=0.95\linewidth]{\@logouno}}}
+        {\includegraphics[width=\linewidth]{\@logouno}}
     }
 \newcommand\@inlogodos{
     \parbox{\@longlogodos}
-    {\centering
-    \ifthenelse{\isundefined{\@logodos}}{\hspace{0pt}}
-        {\includegraphics[width=0.95\linewidth]{\@logodos}}}
+        {\includegraphics[width=\linewidth]{\@logodos}}
     }
 %%  Comando para generar el encabezado
 \newcommand{\encabezado}{
-    \hrule
-    \vspace{-2mm}
-    \begin{center}
-    \ifthenelse{\isundefined{\@logodos}}
-        {\ifthenelse{\isundefined{\@logouno}}
-            {\@titulo}
-            {
-                \@inlogouno
-                \parbox{\@longtitulo}{\centering \@titulo}
-            }
-        }
-        {
-            \@inlogouno
-            \parbox{\@longtitulo}{\centering \@titulo}
-            \@inlogodos
-        }
-    \end{center}
-    \vspace{0mm}
+    % \vspace*{-\voffset}
+    \begingroup\color{colortext}
+    \thispagestyle{plain}
     \noindent
-    \@fecha\hspace{\fill}
-    \@autor\\[-3mm]
-    \noindent
-    \hrule
+    \begin{minipage}{\linewidth}
+    \begin{tblr}{
+      colspec = {Q[m,c]<{\hspace{.02\linewidth}}|[1.2pt]>{\hspace{.02\linewidth}}X[m,l]},
+      colsep = 2pt
+    }
+        \@inlogouno
+        \ifthenelse{\isundefined{\@logodos}}{}
+            {\hspace{0.02\textwidth}\@inlogodos}
+        & \parbox{.98\linewidth}{\@titulo}
+    \end{tblr}
+    \end{minipage}
+    \endgroup
     \ifthenelse{\boolean{resp}}{\color{colortext}}{}
+    \vspace{5mm}
 }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% --- Comando en examen y en respuestas
@@ -205,22 +221,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% --- Comando para linea de datos del estudiante
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%  Para estudiantes de Formación Básica
-\newcommand{\datosF}{\EnExamen{
+\newcommand{\datosestudiante}{\EnExamen{
     \vspace{5mm}
     \noindent
-    Nombres: \hrulefill\
-    Grupo CP: \rule{2cm}{0.4pt}\
-    Grupo CD: \rule{2cm}{0.4pt}}}
-%%  Para estudiantes de Nivelación
-\newcommand{\datosN}{\EnExamen{
-    \vspace{5mm}
-    \noindent
-    Nombres: \hrulefill\
-    Firma: \rule{3cm}{0.4pt}\\[3mm]
-    Profesor: \hrulefill\
-    No. Lista: \rule{2cm}{0.4pt}\
-    Paralelo: \rule{2cm}{0.4pt}}}
+    Nombre: \hrulefill\
+    No. Lista: \rule{2cm}{0.4pt}}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% --- Preguntas
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -228,8 +233,6 @@
 \newenvironment{preguntas}[1][]
     {\begin{enumerate}[leftmargin=*,listparindent=\parindent,#1]}
     {\end{enumerate}}
-%%  Al final de las preguntas
-\newcommand{\final}{\noindent\hrule\@notapie\hspace{\fill}\@firma}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% --- Indicaciones
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -238,9 +241,6 @@
     {\section*{Indicaciones}\begingroup\small
     \begin{itemize}[leftmargin=*,listparindent=\parindent]}
     {\end{itemize}\endgroup}
-%%  Comando para indicaciones para la hoja de datos
-\newcommand{\indicacionesHD}[1]
-    {\newcommand\@indicaciones{#1}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% --- Respuestas
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -297,88 +297,126 @@
     {\normalfontnormalsize\bfseries\scshape}{\thesubsection}{1em}{}
 \titlespacing*{\subsection}{0pt}{2ex}{0.1ex}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% --- Hoja de datos
+%% --- Estilo teoremas
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%  Comando de códigos
-\newcommand{\Npreguntas}[1]
-    {\renewcommand\@Npreguntas{#1}}
-\newcommand*\mytablecontentsUpper{}
-\newcommand*\mytablecontentsLower{}
-%%  Comando de cuadro preguntas
-\newcommand{\CuadroPreguntas}[1]{
-    \renewcommand*\mytablecontentsUpper{}
-    \renewcommand*\mytablecontentsLower{}
-    \foreach \X in {1,...,#1}{
-        {\xappto\mytablecontentsUpper{ & P-\X}
-        \xappto\mytablecontentsLower{ & }
+%%  Keys temporales: |tipo|,|color|, |contador| e |icóno|.
+\def\tcb@@tipo{}
+    \tcbset{ tipo/.code = {\def\tcb@@tipo{#1} } }
+\def\tcb@@contador{}
+    \tcbset{ contador/.code = {\def\tcb@@contador{#1} } }
+\def\tcb@@color{colordef}
+    \tcbset{ color/.code = {\def\tcb@@color{#1} } }
+\def\tcb@@icono{{\large\faWarning}}
+    \tcbset{ icono/.code = {\def\tcb@@icono{#1} } }
+%%  Estilo de teorema.
+\newtheoremstyle{estiloteorema}%
+    {9pt}{9pt}{}{0pt}
+    {\bfseries\color{\tcb@@color}}
+    {}{ }
+    {\textsc{\thmname{#1}\thmnumber{ #2}}\thmnote{: #3}.}
+%%  Formatos del estilo
+%%
+%%  Recuadro sin título aparte
+\tcbset{ recuadrost/.style ={
+    before skip=10pt,arc=0mm,breakable,enhanced,
+    colback=\tcb@@color!7,colframe=\tcb@@color,
+    boxrule=0pt,leftrule=2pt,
+    top=0.5mm,bottom=0.5mm,left=2mm,right=2mm,
+    fontupper=\normalsize,
+    % parbox=false
+    }
+    }
+%%  Estilo de post-it
+\tcbset{ postit/.style ={
+    % -> Opciones generales
+    breakable,enhanced,
+    before skip=2mm,after skip=3mm,
+    colback=\tcb@@color!50,colframe=\tcb@@color!20!black,
+    boxrule=0.4pt,
+    drop fuzzy shadow,
+    left=6mm,right=2mm,top=0.5mm,bottom=0.5mm,
+    sharp corners,rounded corners=southeast,arc is angular,arc=3mm,
+    % parbox=false,
+    underlay unbroken and last = {%
+        \path[fill=tcbcolback!80!black]
+        ([yshift=3mm]interior.south east) --++ (-0.4,-0.1) --++ (0.1,-0.2);
+        \path[draw=tcbcolframe,shorten <=-0.05mm,shorten >=-0.05mm]
+        ([yshift=3mm]interior.south east) --++ (-0.4,-0.1) --++ (0.1,-0.2);
+        \path[fill=\tcb@@color!50!black,draw=none]
+        (interior.south west) rectangle node[white]{\tcb@@icono} ([xshift=5.5mm]interior.north west);
+        },
+    underlay = {%
+        \path[fill=\tcb@@color!50!black,draw=none]
+        (interior.south west) rectangle node[white]{\tcb@@icono} ([xshift=5.5mm]interior.north west);
         }
     }
-    \begin{tabular}{|c|*{#1}{c|}}\hline
-         \mytablecontentsUpper \\
-        \hline
-        Entrega (sí/no) \mytablecontentsLower \\
-        \hline
-        No. de hojas \mytablecontentsLower \\
-        \hline
-    \end{tabular}
     }
-%%  Comando de códigos
-\newcommand{\codigo}[5]
-    {\thispagestyle{empty}
-    \encabezado
-    \begin{indicaciones}
-    \@indicaciones
-    \end{indicaciones}
-    \noindent \hrule \large
-    \begin{center}
-        \textbf{\textsc{Datos}}
-
-        Nombre: #1
-
-        Código: #2
-        \hspace{1.5cm}
-        Grupo CD: #3
-        \hspace{1.5cm}
-        Grupo CP: #4
-    \end{center}
-    \noindent \hrule
-    \begin{center}
-        \textbf{\textsc{Preguntas entregadas}}
-
-        \CuadroPreguntas{\@Npreguntas}
-
-        \vspace{2.5cm}
-        \begin{tabular}{p{5cm}}
-             \hline\centering Firma
-        \end{tabular}
-    \end{center}
-    \newpage
+%%  Recuadro con título aparte interno
+\tcbset{ recuadroctint/.style ={
+    % -> Opciones generales
+    before skip=10pt,arc=0mm,breakable,enhanced,
+    colback=colordef!7,colframe=colordef!7,colbacktitle=colordef!7,
+    boxrule=0pt,toprule=0.4pt,
+    drop fuzzy shadow,
+    top=0.5mm,bottom=0.5mm,left=2mm,right=2mm,
+    fontupper=\normalsize,
+    code={\refstepcounter{\tcb@@contador}},
+    % parbox=false,
+    % Dibujo del título
+    overlay unbroken and first = {
+        % Borde superior grueso
+        \draw[\tcb@@color,line width =2.5cm]
+            ([xshift=1.25cm, yshift=0cm]frame.north west)--+(0pt,3pt);
+        },
+    overlay middle and last = { },
+    title={
+            \color{\tcb@@color}\bfseries
+            {\scshape\tcb@@tipo~\arabic{\tcb@@contador}}%
+                %
+            \ifthenelse{\equal{#1}{}}{.}{: #1.}%
+        },
+    }
     }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% --- Hoja de respuestas
+%% --- Definición de ambientes de teoremas
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%  Comando para cuadro
-\newcommand{\cuadro}[1][Aj]
-    {\fbox{\textcolor{white}{\LARGE #1}}}
-%%  Comando de hoja de respuesta
-\newcommand{\HojaRespuesta}[1][]
-    {
-    \thispagestyle{empty}
-    \hrule
-    \vspace{-2mm}
-    \begin{center}
-    \large\textbf{\textsc{Hoja de respuestas}}
-    \end{center}
-
-    \vspace{-2mm}
-    \noindent
-    Código: \cuadro\cuadro\cuadro\cuadro\hspace{\fill}
-    Número de pregunta: \cuadro\hspace{\fill}
-    Hoja (de esta pregunta): \cuadro\ de \cuadro%
-    \ifthenelse{\equal{#1}{}}{\\}
-        {\\[2mm] #1\\}
-    \noindent \hrule
-    }
+%%  Ambientes sin recuadro: |ejem| y |obs|
+\theoremstyle{estiloteorema}
+    \newtheorem{ejem}{Ejemplo}
+    \newtheorem*{obs}{\tikz \fill[colordef] (1ex,1ex) circle (.8ex); Observaci\'on}
+%%  Ambientes con recuadrost: |prop|, |cor|, |lem|, |ejer|.
+    \newtheorem{prop}{Proposici\'on}
+        \tcolorboxenvironment{prop}{%
+            color=colordef,recuadrost,colback=colordef!7,drop fuzzy shadow
+        }
+    \newtheorem{cor}[prop]{Corolario}
+        \tcolorboxenvironment{cor}{%
+            color=colordef,recuadrost,colback=colordef!7,drop fuzzy shadow
+        }
+    \newtheorem{lem}[prop]{Lema}
+        \tcolorboxenvironment{lem}{%
+            color=colordef,recuadrost,colback=colordef!7,drop fuzzy shadow
+        }
+    \newtheorem{ejer}{Ejercicio}
+        \tcolorboxenvironment{ejer}{%
+            color=colordef,recuadrost,colback=colordef!7,drop fuzzy shadow
+        }
+%%  Ambientes con título aparte: |teo|.
+\newtcolorbox{teo}[1][]
+    {tipo=Teorema,contador=prop,color=colordef,recuadroctint={#1}}
+%%  Ambientes con título aparte: |defi|.
+\newcounter{defi}
+\renewcommand{\thedefi}{\arabic{defi}}
+\newtcolorbox{defi}[1][]
+    {tipo=Definici\'on,contador=defi,color=colordef,recuadroctint={#1}}
+%%  Ambientes con título aparte: |axioma|.
+\newcounter{axioma}
+\renewcommand{\theaxioma}{\arabic{axioma}}
+\newtcolorbox{axioma}[1][]
+    {tipo=Axioma,contador=axioma,color=colordef,recuadroctint={#1}}
+%%  Ambientes advertencia: |advertencia|.
+\newtcolorbox{advertencia}
+    {color=yellow,postit}
 %%  Y ¡se acabó!
 \endinput
 %%
