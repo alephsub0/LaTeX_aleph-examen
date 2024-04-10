@@ -72,6 +72,7 @@
 \RequirePackage{titlesec}
 \RequirePackage{tabularray}
 \RequirePackage{etoolbox}
+\RequirePackage{xparse}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% --- Paquetes de tipografía
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -106,6 +107,7 @@
             \setmainfont{montserrat}
             \DeclareSymbolFont{operators}{\encodingdefault}{\familydefault}{m}{n}
             \DeclareMathSizes{10}{10.78}{7}{7}
+            \renewcommand{\labelitemi}{$\bullet$}
         \fi
     }{}
 }
@@ -114,13 +116,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%  La siguiente es la lista de las variables internas utilizadas para el formato.
 \newcommand\@institucion{Alephsub0}
-\newcommand\@firma{\hspace{0pt}}
-\newcommand\@notapie{\hspace{0pt}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% --- Colores predeterminados
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%  Los siguientes son los colores predefinidos de la clase.
 \definecolor{colortext}{cmyk}{0.81,0.62,0.00,0.22}
+\definecolor{coloropcion}{cmyk}{0.81,0.62,0.99,0.22}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% --- Definición de comandos de datos
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -221,11 +222,28 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% --- Comando para linea de datos del estudiante
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand{\datosestudiante}{\EnExamen{
-    \vspace{5mm}
-    \noindent
-    Nombre: \hrulefill\
-    No. Lista: \rule{2cm}{0.4pt}}}
+\NewDocumentCommand{\datosestudiante}{o O{2cm}}{%
+    \EnExamen{%
+        \vspace{5mm}%
+        \noindent%
+        Nombre: \hrulefill\ %
+        \IfValueT{#1}{
+            #1: \rule{#2}{0.4pt}
+        }%
+    }%
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% --- Comando para firma del estudiante
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\firmaestudiante}{%
+    \EnExamen{%
+    \begin{center}
+        \vspace{2cm}
+        \rule{4.5cm}{0.4pt}\\
+        Firma del estudiante
+    \end{center}
+    }
+}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% --- Preguntas
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -255,20 +273,23 @@
 %% --- Respuesta de opción múltiple
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%  Comando para opción múltiple
-\newcommand{\opciones}[4]
-    {\vspace{-1mm}
+\NewDocumentCommand{\opciones}{O{0} m m m m}{
+    \vspace{-1mm}
     \begin{enumerate}[leftmargin=*,label=\textit{\alph*)}]
-    \item #1 \item #2 \item #3 \item #4
+        \item \IfValueTF{#1}{\ifnum#1=1 \textcolor{coloropcion}{#2}\else #2\fi}{#2}
+        \item \IfValueTF{#1}{\ifnum#1=2 \textcolor{coloropcion}{#3}\else #3\fi}{#3}
+        \item \IfValueTF{#1}{\ifnum#1=3 \textcolor{coloropcion}{#4}\else #4\fi}{#4}
+        \item \IfValueTF{#1}{\ifnum#1=4 \textcolor{coloropcion}{#5}\else #5\fi}{#5}
     \end{enumerate}
-    }
+}
 %%  Comando para opción múltiple en linea
-\newcommand{\opcionesl}[4]
-    {\par\noindent
-    \textit{a)} \ #1 \hfill
-    \textit{b)} \ #2 \hfill
-    \textit{c)} \ #3 \hfill
-    \textit{d)} \ #4
-    }
+\NewDocumentCommand{\opcionesl}{O{0} m m m m}{
+    \par\noindent
+    \textit{a)} \IfValueTF{#1}{\ifnum#1=1 \textcolor{coloropcion}{#2}\else #2\fi}{#2} \hfill
+    \textit{b)} \IfValueTF{#1}{\ifnum#1=2 \textcolor{coloropcion}{#3}\else #3\fi}{#3} \hfill
+    \textit{c)} \IfValueTF{#1}{\ifnum#1=3 \textcolor{coloropcion}{#4}\else #4\fi}{#4} \hfill
+    \textit{d)} \IfValueTF{#1}{\ifnum#1=4 \textcolor{coloropcion}{#5}\else #5\fi}{#5}
+}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% --- Puntaje
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

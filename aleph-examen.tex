@@ -117,7 +117,16 @@ Para esta nueva versión se incluye el comando \verb|\fuente|
 \DescribeMacro{\opcionesl}
     El comando \cmd{\opciones} tiene cuatro argumentos obligatorios y genera una lista de cuatro literales para las preguntas de opción múltiple, su sintaxis es:\\
         \hspace*{3em}\cs{opciones}\marg{Op1}\marg{Op2}\marg{Op3}\marg{Op4}.\\
-    El comando \cmd{\opcionesl} es similar al anterior, pero despliega las opciones en una sola línea. 
+    El comando \cmd{\opcionesl} es similar al anterior, pero despliega las opciones en una sola línea. Adicionalmente, tiene un comando opcional (un número del 1 al 4) que colorea la respuesta cuando se tiene habilitada la opción global de respuestas, este color se puede cambiar modificando \cmd{coloropcion}.
+    
+\DescribeMacro{\puntaje}
+    El comando \cmd{\puntaje} coloca el puntaje al final de cada pregunta.
+    
+\DescribeMacro{\datosestudiante}
+    El comando \cmd{\datosestudiante} coloca un espacio para que el estudiante escriba su nombre. Posee una opción para adicionar un espacio para otro dato extra (por ejemplo, «No. de lista») y deja un espacio de 2 cm, este espacio también se puede cambiar con una opción adicional.
+    
+\DescribeMacro{\firmaestudiante}
+    El comando \cmd{\firmaestudiante} coloca un espacio para que el estudiante firme el examen.
     
 \DescribeMacro{\puntaje}
     El comando \cmd{\puntaje} coloca el puntaje al final de cada pregunta.

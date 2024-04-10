@@ -62,6 +62,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% --- Paquetes de tipografía
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% El siguiente comando define las opciones de tipografía a utilizar de acuerdo al tipo de compilador
 \newcommand{\fuente}[1]{
     \ifthenelse{\equal{#1}{mathpazo}}
     {
@@ -92,6 +93,7 @@
             \setmainfont{montserrat}
             \DeclareSymbolFont{operators}{\encodingdefault}{\familydefault}{m}{n}
             \DeclareMathSizes{10}{10.78}{7}{7}
+            \renewcommand{\labelitemi}{$\bullet$}
         \fi
     }{}
 }
