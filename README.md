@@ -43,9 +43,11 @@ Este proyecto se ha probado con Tex Live 2023 sin problemas.
 ## Últimos cambios
 
 ```
-2.0  2023-12-25
+- 2.0.1  2025-12-04
+   - Mejora compatibilidad de fuentes.
+- 2.0  2023-12-25
    - Se agrega el soporte para los ambientes de teoremas implementados en los paquetes aleph-notas y aleph-examen
-   - Se añade la posibilidad de seleccionar fuentes: Palatino Linotype (mathpaso) y Monstserrat
+   - Se añade la posibilidad de seleccionar fuentes: Palatino Linotype (mathpaso) y Montserrat
    - Se modifican los comandos de datos
    - Se cambia el diseño del encabezado y disposición de los logos
    - Actualización de la documentación
